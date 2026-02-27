@@ -3,6 +3,7 @@ package com.otus.securehomework.di
 import android.content.Context
 import com.otus.securehomework.data.repository.AuthRepository
 import com.otus.securehomework.data.repository.UserRepository
+import com.otus.securehomework.data.source.local.BiometricHelper
 import com.otus.securehomework.data.source.local.SecurityManager
 import com.otus.securehomework.data.source.local.UserPreferences
 import com.otus.securehomework.data.source.network.AuthApi
@@ -55,6 +56,14 @@ object AppModule {
         securityManager: SecurityManager
     ): UserPreferences {
         return UserPreferences(context, securityManager)
+    }
+
+    @Singleton
+    @Provides
+    fun provideBiometricHelper(
+        @ApplicationContext context: Context
+    ): BiometricHelper {
+        return BiometricHelper(context)
     }
 
     @Provides
