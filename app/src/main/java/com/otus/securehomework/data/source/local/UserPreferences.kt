@@ -12,23 +12,24 @@ private const val dataStoreFile: String = "securePref"
 
 class UserPreferences
 @Inject constructor(
-    private val context: Context
+    private val context: Context,
+    private val securityManager: SecurityManager
 ) {
 
     val accessToken: Flow<String?>
         get() = context.dataStore.data.map { preferences ->
-            preferences[ACCESS_TOKEN]
+            securityManager.decrypt(preferences[ACCESS_TOKEN])
         }
 
     val refreshToken: Flow<String?>
         get() = context.dataStore.data.map { preferences ->
-            preferences[REFRESH_TOKEN]
+            securityManager.decrypt(preferences[REFRESH_TOKEN])
         }
 
     suspend fun saveAccessTokens(accessToken: String?, refreshToken: String?) {
         context.dataStore.edit { preferences ->
-            accessToken?.let { preferences[ACCESS_TOKEN] = it }
-            refreshToken?.let { preferences[REFRESH_TOKEN] = it }
+            accessToken?.let { preferences[ACCESS_TOKEN] = securityManager.encrypt(it)!! }
+            refreshToken?.let { preferences[REFRESH_TOKEN] = securityManager.encrypt(it)!! }
         }
     }
 

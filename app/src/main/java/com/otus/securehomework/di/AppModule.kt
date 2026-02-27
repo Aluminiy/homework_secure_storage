@@ -3,6 +3,7 @@ package com.otus.securehomework.di
 import android.content.Context
 import com.otus.securehomework.data.repository.AuthRepository
 import com.otus.securehomework.data.repository.UserRepository
+import com.otus.securehomework.data.source.local.SecurityManager
 import com.otus.securehomework.data.source.local.UserPreferences
 import com.otus.securehomework.data.source.network.AuthApi
 import com.otus.securehomework.data.source.network.UserApi
@@ -41,10 +42,19 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideUserPreferences(
+    fun provideSecurityManager(
         @ApplicationContext context: Context
+    ): SecurityManager {
+        return SecurityManager(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserPreferences(
+        @ApplicationContext context: Context,
+        securityManager: SecurityManager
     ): UserPreferences {
-        return UserPreferences(context)
+        return UserPreferences(context, securityManager)
     }
 
     @Provides
